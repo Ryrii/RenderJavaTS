@@ -1,4 +1,4 @@
-import { fetchGraphDataFromGitHub,  fetchGraphLocal} from './api.js';
+import { fetchGraphDataFromGitHub} from './api.js';
 
 var graphElems
 document.getElementById('loadGraphFromGitHub').addEventListener('click', async function() {
