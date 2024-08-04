@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Graph View</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.21.1/cytoscape.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre"></script>
+    <link rel="stylesheet" type="text/css" href="/css/graphView.css" />
+</head>
+<body>
+<h1>Graph View</h1>
+<h2>Select From Github :</h2>
+<label for="projectName">Project Name:</label>
+<input type="text" id="projectName" name="projectName" value="HouariZegai">
+<label for="repoName">Repository Name:</label>
+<input type="text" id="repoName" name="repoName" value="Calculator">
+<label for="token">Token:</label>
+<input type="text" id="token" name="token" value="">
+<button id="loadGraphFromGitHub">Load Graph</button>
+<br>
+<h2>Select From Project :</h2>
+<button id="loadMatricesLocal">Load Matrices Graph</button>
+<button id="loadArgoLocal">Load Matrices Graph</button>
+<br>
+<p id="loadGraphError">Repo ou Token incorrect</p>
+
+<h2>Select Layout</h2>
+<button id="dagreeLayout">Dagree</button>
+<button id="coseLayout">Cose</button>
+<button id="dagreeContainLayout">Dagree Contain First</button>
+
+<div id="cy-container">
+    <div id="waitingDataText">Waiting data</div>
+    <div id="generatingGraphText">Generating Graph</div>
+    <div class="spinner" id="spinner"></div>
+    <div id="cy"></div>
+</div>
+<div class="zoom-buttons">
+    <button id="zoom-in">Zoom +</button>
+    <button id="zoom-out">Zoom -</button>
+</div>
+<script  type="module"  src="/js/graphView.js"></script>
+</body>
+</html>
