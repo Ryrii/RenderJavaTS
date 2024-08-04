@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: spring-boot-app
+    env: java
+    plan: free
+    buildCommand: ./gradlew build
+    startCommand: java -jar build/libs/your-app-name.jar
+    envVars:
+      - key: JAVA_HOME
+        value: /opt/render/project/src/.java
+    runtime: openjdk-17 # or another version
