@@ -21,28 +21,7 @@ document.getElementById('loadGraphFromGitHub').addEventListener('click', async f
     }
     hideSpinner()
 });
-document.getElementById('loadMatricesLocal').addEventListener('click', async function() {
-    if (cy) {
-        cy.destroy();
-    }
-    showSpinner()
-    document.getElementById('loadGraphError').style.display = 'none';
-    graphElems = await fetchGraphLocal("ressources/matrices")
-    console.log(graphElems)
-    initCytoscape("cy", graphElems);
-    hideSpinner()
-});
-document.getElementById('loadArgoLocal').addEventListener('click', async function() {
-    if (cy) {
-        cy.destroy();
-    }
-    showSpinner()
-    document.getElementById('loadGraphError').style.display = 'none';
-    graphElems = await fetchGraphLocal("ressources/argo")
-    console.log(graphElems)
-    initCytoscape("cy", graphElems);
-    hideSpinner()
-});
+
 var cy
 function initCytoscape(containerId,elements) {
   showGeneratingGraphText()
