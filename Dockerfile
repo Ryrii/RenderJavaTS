@@ -1,5 +1,5 @@
 # Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17-jdk-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -27,3 +27,6 @@ COPY build/libs/tree-sitter-ng1-1.0-SNAPSHOT.jar app.jar
 
 # Define the command to run the application
 CMD ["java", "-jar", "/app/app.jar"]
+
+# Print Java version to verify
+RUN java -version
