@@ -1,5 +1,6 @@
 export function fetchGraphDataFromGitHub(user, project, token) {
-var url = 'http://localhost:8080/graph/github?user=' + user + '&project=' + project + '&token=' + token;
+
+var url = 'graph/github?user=' + user + '&project=' + project + '&token=' + token;
     return fetch(url)
         .then(response => {
             if (!response.ok) {
