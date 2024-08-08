@@ -4,14 +4,14 @@ FROM openjdk:17-jdk-alpine
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the build.gradle.kts, settings.gradle.kts, and gradlew files from the src directory
-COPY src/build.gradle.kts src/settings.gradle.kts src/gradlew /app/
+# Copy the build.gradle.kts, settings.gradle.kts, and gradlew files
+COPY build.gradle.kts settings.gradle.kts gradlew /app/
 
 # Copy the gradle wrapper directory
-COPY src/gradle /app/gradle
+COPY gradle /app/gradle
 
 # Copy the source code
-COPY src/src /app/src
+COPY src /app/src
 
 # Give permissions to gradlew
 RUN chmod +x gradlew
