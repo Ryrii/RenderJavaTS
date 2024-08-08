@@ -13,7 +13,7 @@ import static lip6.Main.getJsonFromGitHub;
 @Controller
 public class GraphViewController {
 
-    @GetMapping("/graphView")
+    @GetMapping("/")
     public String viewGraph(Model model) {
         return "graphView";
     }
