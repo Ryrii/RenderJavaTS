@@ -22,5 +22,8 @@ RUN ./gradlew build --no-daemon
 # Expose the port that the application will run on
 EXPOSE 8080
 
+# Copy the JAR file to the app directory
+COPY build/libs/tree-sitter-ng1-1.0-SNAPSHOT.jar app.jar
+
 # Define the command to run the application
-CMD ["java", "-jar", "/app/build/libs/your-app-name.jar"]
+CMD ["java", "-jar", "/app/app.jar"]
