@@ -1,5 +1,5 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+# Stage 1: Build the application
+FROM openjdk:17-jdk-slim as builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -19,11 +19,17 @@ RUN chmod +x gradlew
 # Build the application
 RUN ./gradlew build --no-daemon
 
+# Stage 2: Run the application
+FROM openjdk:17-jdk-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the JAR file from the builder stage
+COPY --from=builder /app/build/libs/tree-sitter-ng1-1.0-SNAPSHOT.jar app.jar
+
 # Expose the port that the application will run on
 EXPOSE 8080
-
-# Copy the JAR file to the app directory
-COPY build/libs/tree-sitter-ng1-1.0-SNAPSHOT.jar app.jar
 
 # Define the command to run the application
 CMD ["java", "-jar", "/app/app.jar"]
