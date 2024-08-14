@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="MainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-08-08T00:56:06" hostname="iMac-de-Ryry.local" time="0.058">
+<testsuite name="MainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-08-14T00:40:38" hostname="iMac-de-Ryry.local" time="0.053">
   <properties/>
-  <testcase name="testBuildGraph()" classname="MainTest" time="0.058"/>
+  <testcase name="testBuildGraph()" classname="MainTest" time="0.053"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

@@ -1,7 +1,7 @@
-import { fetchGraphDataFromGitHub} from './api.js';
+import { fetchGraphDataFromGitHub,  fetchGraphLocal} from './api.js';
 
 var graphElems
-document.getElementById('loadGraphFromGitHub').addEventListener('click', async function() {
+document.getElementById('loadGraphFromGitHub').addEventListener('click',async function() {
     if (cy) {
         cy.destroy();
     }
@@ -10,8 +10,10 @@ document.getElementById('loadGraphFromGitHub').addEventListener('click', async f
     const projectName = document.getElementById('projectName').value
     const repoName = document.getElementById('repoName').value
     const token = document.getElementById('token').value
+   const declarationTypes = Array.from(document.querySelectorAll('#declarationTypes input:checked')).map(option => option.value);
     showWaitingDataText()
-    graphElems = await fetchGraphDataFromGitHub(projectName,repoName,token)
+
+    graphElems = await fetchGraphDataFromGitHub(projectName,repoName,token,declarationTypes)
     console.log(graphElems)
     hideWaitingDataText()
     if(graphElems=="error"){
@@ -21,7 +23,6 @@ document.getElementById('loadGraphFromGitHub').addEventListener('click', async f
     }
     hideSpinner()
 });
-
 var cy
 function initCytoscape(containerId,elements) {
   showGeneratingGraphText()
@@ -194,3 +195,40 @@ function showGeneratingGraphText() {
 function hideGeneratingGraphText() {
   document.getElementById('generatingGraphText').style.display = 'none';
 }
+
+document.getElementById('listJavaFiles').addEventListener('click',async function() {
+    const input = document.getElementById('localRepo');
+    const files = input.files;
+    if (files.length === 0) {
+        alert('Please select a directory.');
+        return;
+    }
+
+    const javaFiles = [];
+    for (let file of files) {
+        if (file.name.endsWith('.java')) {
+            const content = await file.text();
+            javaFiles.push( content );
+        }
+    }
+    //console.log(javaFiles);
+    const declarationTypes = Array.from(document.querySelectorAll('#declarationTypes input:checked')).map(option => option.value);
+    declarationTypes.push('package_declaration');
+    if (cy) {
+        cy.destroy();
+    }
+    showSpinner()
+    document.getElementById('loadGraphError').style.display = 'none';
+
+    showWaitingDataText()
+
+    graphElems = await fetchGraphLocal(javaFiles,declarationTypes)
+    console.log(graphElems)
+    hideWaitingDataText()
+    if(graphElems=="error"){
+        document.getElementById('loadGraphError').style.display = 'block';
+    }else{
+    initCytoscape("cy", graphElems);
+    }
+    hideSpinner()
+});

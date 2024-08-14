@@ -10,16 +10,38 @@
 </head>
 <body>
 <h1>Graph View</h1>
+<h2>Select Node Types :</h2>
+<div id="declarationTypes">
+    <input type="checkbox" id="class_declaration" name="declarationTypes" value="class_declaration" checked>
+    <label for="class_declaration">Class Declaration</label><br>
+    <input type="checkbox" id="constructor_declaration" name="declarationTypes" value="constructor_declaration" checked>
+    <label for="constructor_declaration">Constructor Declaration</label><br>
+    <input type="checkbox" id="method_declaration" name="declarationTypes" value="method_declaration" checked>
+    <label for="method_declaration">Method Declaration</label><br>
+    <input type="checkbox" id="field_declaration" name="declarationTypes" value="field_declaration" checked>
+    <label for="field_declaration">Field Declaration</label><br>
+    <input type="checkbox" id="local_variable_declaration" name="declarationTypes" value="local_variable_declaration" checked>
+    <label for="local_variable_declaration">Local Variable Declaration</label><br>
+</div>
 <h2>Select From Github :</h2>
-<label for="projectName">User Name:</label>
+<label for="projectName">Project Name:</label>
 <input type="text" id="projectName" name="projectName" value="Ryrii">
 <label for="repoName">Repository Name:</label>
 <input type="text" id="repoName" name="repoName" value="RenderJavaTS">
 <label for="token">Token:</label>
-<input type="text" id="token" name="token" value="">
-<button id="loadGraphFromGitHub">Load Graph</button>
-<br>
+<input type="text" id="token" name="token" value="" size="50">
+<br><br>
 
+<button id="loadGraphFromGitHub">Load Graph</button>
+<br><br>
+
+<h2>Select Local Repository :</h2>
+<input type="file" id="localRepo" webkitdirectory directory multiple>
+<br><br>
+
+<button id="listJavaFiles">Load Graph</button>
+<ul id="javaFileList"></ul>
+<br>
 <p id="loadGraphError">Repo ou Token incorrect</p>
 
 <h2>Select Layout</h2>
