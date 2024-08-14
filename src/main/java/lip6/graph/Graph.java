@@ -51,11 +51,11 @@ public class Graph  {
     }
     public void addUseEdges() {
         List<String> classDeclarationNames = getClassDeclarationNames();
-        System.out.println("classDeclarationNames : "+classDeclarationNames);
-        System.out.println("classUses : "+classUses.size());
-        for (ClassUse classUse : classUses) {
-            System.out.println(classUse.getClassName());
-        }
+//        System.out.println("classDeclarationNames : "+classDeclarationNames);
+//        System.out.println("classUses : "+classUses.size());
+//        for (ClassUse classUse : classUses) {
+//            System.out.println(classUse.getClassName());
+//        }
         for (String classDeclarationName : classDeclarationNames) {
             for (ClassUse classUse : classUses) {
                 if (classUse.isUsed(classDeclarationName)) {
@@ -63,11 +63,11 @@ public class Graph  {
                 }
             }
         }
-        System.out.println("Use Edges : "+edges.stream().filter(e -> e.getType().equals("use")).count());
+//        System.out.println("Use Edges : "+edges.stream().filter(e -> e.getType().equals("use")).count());
         List<GraphEdge> useEdges = edges.stream().filter(e -> e.getType().equals("use")).toList();
-        for (GraphEdge edge : useEdges) {
-            System.out.println(edge);
-        }
+//        for (GraphEdge edge : useEdges) {
+//            System.out.println(edge);
+//        }
     }
     public Map<String, List<String>> getNodesByType() {
         Map<String, List<String>> nodesByType = new HashMap<>();

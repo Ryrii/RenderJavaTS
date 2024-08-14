@@ -41,11 +41,13 @@ public class Main {
     } 
                 """;
         Graph g = new Graph();
-        TSTree tree = getTree(code);
+        TSTree tree = getTree(null);
         TSNode rootNode = tree.getRootNode();
         g.setImports(new ArrayList<>());
         g.setPackageName(null);
-        addNodeAndChildrenToGraph(g, rootNode, null);
+        List<String> declarationTypes = List.of("package_declaration", "class_declaration");
+        addNodeAndChildrenToGraph(g, rootNode, null,declarationTypes);
+        g.addUseEdges();
         System.out.println(g.getJSONForCytoscape());
 //        TSTree tree = getTree();
 //        TSNode rootNode = tree.getRootNode();
@@ -54,7 +56,8 @@ public class Main {
 //        Graph g = buildGraph(tree);
 ////        System.out.println(g);
 //        String repoUrl = "RyRii/TreeSitter";
-//       GitHubFileProcessor gitHubFileProcessor;
+//        String token = "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";
+//        GitHubFileProcessor gitHubFileProcessor;
 //
 //        String directoryPath = "ressources/argo";
 //        FileProcessor fileProcessor = new FileProcessor(directoryPath);
@@ -91,40 +94,32 @@ public class Main {
 //        g.addUseEdges();
 //        System.out.println("Use Edges Added Successfully");
     }
-    public static String getJsonFromPath(String path) {
-        String directoryPath = path;
-        FileProcessor fileProcessor = new FileProcessor(directoryPath);
-        Graph g = new Graph();
+    public static String getJsonFromPath(List<String> codeList, List<String> declarationTypes) {
+    Graph g = new Graph();
 
-        try {
-            List<Path> filePaths = fileProcessor.listFiles();
-            List<Path> subFilePaths = filePaths.subList(0, filePaths.size());
-            int count = 0;
-            int nbFiles = subFilePaths.size();
-            for (Path filePath : subFilePaths) {
-                count++;
-                System.out.println("Processing file " + count + " out of " + nbFiles);
-                String code = fileProcessor.readFileContent(filePath);
-                TSTree tree = getTree(code);
-                TSNode rootNode = tree.getRootNode();
-                g.setImports(new ArrayList<>());
-                g.setPackageName(null);
-                addNodeAndChildrenToGraph(g, rootNode, null);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Adding Use Edges");
-        g.addUseEdges();
-        System.out.println("Use Edges Added Successfully");
-        String json = g.getJSONForCytoscape();
-        System.out.println(json.length());
-        return json;
+    int count = 0;
+    int nbFiles = codeList.size();
+    for (String code : codeList) {
+        count++;
+        System.out.println("Processing file " + count + " out of " + nbFiles);
+        TSTree tree = getTree(code);
+        TSNode rootNode = tree.getRootNode();
+        g.setImports(new ArrayList<>());
+        g.setPackageName(null);
+        addNodeAndChildrenToGraph(g, rootNode, null, declarationTypes);
     }
-    public static ResponseEntity<String> getJsonFromGitHub(String repoUrl, String token) {
+
+    System.out.println("Adding Use Edges");
+    g.addUseEdges();
+    System.out.println("Use Edges Added Successfully");
+    String json = g.getJSONForCytoscape();
+    System.out.println(json.length());
+    return json;
+}
+    public static ResponseEntity<String> getJsonFromGitHub(String repoUrl, String token,List<String> declarationTypes) {
         GitHubFileProcessor gitHubFileProcessor;
         Graph g = new Graph();
-
+//        List <String> declarationTypes = List.of("package_declaration", "class_declaration", "constructor_declaration", "method_declaration", "field_declaration", "local_variable_declaration");
         try {
             gitHubFileProcessor = new GitHubFileProcessor(repoUrl, token);
             List<GHContent> javaFiles = gitHubFileProcessor.listJavaFiles();
@@ -138,7 +133,7 @@ public class Main {
                 TSNode rootNode = tree.getRootNode();
                 g.setImports(new ArrayList<>());
                 g.setPackageName(null);
-                addNodeAndChildrenToGraph(g, rootNode, null);
+                addNodeAndChildrenToGraph(g, rootNode, null,declarationTypes);
             }
         } catch (IOException e) {
 //            e.printStackTrace();
@@ -157,13 +152,22 @@ public class Main {
         code1= code1 !=null ? code1 :  """
                 package pckg_a;
                     class class_A{
-                    int field_a;
-                    public cstrct_A(){
+                        int field_a;
+                        public cstrct_A(){
+                        }
+                        public void method_a(int arg_a, int arg_b){
+                        }
+                        public void method_b(int arg_a, int arg_b){
+                        }
                     }
-                    public void method_a(int arg_a, int arg_b){
-                    }
-                    public void method_b(int arg_a, int arg_b){
-                    }
+                    class class_B{
+                        class_A field_b;
+                        public cstrct_B(){
+                        }
+                        public void method_c(int arg_c, int arg_d){
+                        }
+                        public void method_d(int arg_e, int arg_f){
+                        }
                     }
                 }
                 """;
@@ -174,7 +178,8 @@ public class Main {
     public static Graph buildGraph(TSTree tree) {
         Graph g = new Graph();
         TSNode rootNode = tree.getRootNode();
-        addNodeAndChildrenToGraph(g, rootNode, null);
+        List <String> declarationTypes = List.of("package_declaration", "class_declaration", "constructor_declaration", "method_declaration", "field_declaration", "local_variable_declaration");
+        addNodeAndChildrenToGraph(g, rootNode, null,declarationTypes);
         return g;
     }
     private static boolean isDeclarationNode(TSNode node) {
@@ -182,11 +187,18 @@ public class Main {
         String type = node.getType();
         return declarationTypes.contains(type);
     }
-    public static void addNodeAndChildrenToGraph(Graph g, TSNode node, String parentNodeName) {
+    public static void addNodeAndChildrenToGraph(Graph g, TSNode node, String parentNodeName,List<String> declarationTypes) {
         String NodeName = SourceCode.getName(node);
         String nodeQName = (parentNodeName == null) ? NodeName :
                 parentNodeName + '.' + NodeName;
         String nodeType = node.getType();
+//        System.out.println("Node start Character : " + node.getStartByte());
+//        System.out.println("Node end Character : " + node.getEndByte());
+//
+//        System.out.println("Node start column : " + node.getStartPoint().getColumn());
+//        System.out.println("Node start line : " + node.getStartPoint().getRow());
+//        System.out.println("Node end column : " + node.getEndPoint().getColumn());
+//        System.out.println("Node end line : " + node.getEndPoint());
         if(nodeType.equals("type_identifier") && isDeclarationNode(node.getParent()) ){
             g.addClassUse(NodeName, parentNodeName);
         }
@@ -194,7 +206,7 @@ public class Main {
 //            System.out.println("Import Declaration : " + SourceCode.getName(node));
             g.addImport(NodeName);
         }
-        if(isDeclarationNode(node)){
+        if(declarationTypes.contains(nodeType)){
             g.addNode(nodeQName, nodeType , parentNodeName);
             if (parentNodeName != null) {
                 g.addEdge(parentNodeName, nodeQName,"contain");
@@ -207,11 +219,11 @@ public class Main {
             TSNode child = node.getChild(i);
             if(child.getType().equals("package_declaration")){
                 parentNodeName = SourceCode.getName(child);
-                addNodeAndChildrenToGraph(g, child, null);
+                addNodeAndChildrenToGraph(g, child, null,declarationTypes);
                 g.setPackageName(parentNodeName);
             }
             else{
-                addNodeAndChildrenToGraph(g, child, parentNodeName);
+                addNodeAndChildrenToGraph(g, child, parentNodeName,declarationTypes);
             }
         }
     }
