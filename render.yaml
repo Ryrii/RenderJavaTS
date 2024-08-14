@@ -4,4 +4,4 @@ services:
     plan: free
     buildCommand: ./gradlew build
     startCommand: ./gradlew bootRun
-    runtime: java
+    runtime: docker
